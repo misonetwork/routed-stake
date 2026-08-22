@@ -105,7 +105,7 @@ fun stranger_sweeps_into_shared_parent_pool() {
     let mut stake_pool = ts.take_shared<RoyaltyPool<ASSET_SHARE, USD>>();
     let mut routed_pool = ts.take_shared<RoyaltyPool<PARENT_SHARE, USD>>();
     let mut routed = ts.take_shared<RoutedStake<ASSET_SHARE, PARENT_SHARE>>();
-    let routed_id = routed.id();
+    let routed_id = object::id(&routed);
     routed.sweep(&mut stake_pool, &mut routed_pool, parent_id);
     assert_eq!(routed_pool.balance().value(), 500);
     // The wrapped stake stayed put — sweep does not touch principal.
@@ -154,7 +154,7 @@ fun lifecycle_exits_and_refills_across_shared_transactions() {
     let mut parent = ts.take_shared<Parent>();
     let mut stake_pool = ts.take_shared<RoyaltyPool<ASSET_SHARE, USD>>();
     let mut routed = ts.take_shared<RoutedStake<ASSET_SHARE, PARENT_SHARE>>();
-    let routed_id = routed.id();
+    let routed_id = object::id(&routed);
     let parent_id = parent.id.to_inner();
     routed.unregister(&mut parent.id, &mut stake_pool);
     let principal = routed.unstake(&mut parent.id);

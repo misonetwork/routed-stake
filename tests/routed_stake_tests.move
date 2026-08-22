@@ -55,7 +55,7 @@ fun sweep_routes_rewards_to_the_parent_pool() {
         balance::create_for_testing<ASSET_SHARE>(1000),
         ctx,
     );
-    assert_eq!(routed.id().to_address(), routed_stake::derived_address<ASSET_SHARE>(parent_id));
+    assert_eq!(object::id(&routed).to_address(), routed_stake::derived_address<ASSET_SHARE>(parent_id));
     routed.register(&mut parent, &mut stake_pool);
 
     // The routed stake is the sole staker in the stake pool, so it earns the

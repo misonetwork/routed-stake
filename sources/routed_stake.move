@@ -103,7 +103,7 @@ public fun new<StakeShare, PoolShare>(
     };
 
     emit(RoutedStakeCreatedEvent<StakeShare, PoolShare> {
-        routed_stake_id: routed.id(),
+        routed_stake_id: object::id(&routed),
         parent_id,
         staked_value: routed.value(),
     });
@@ -160,7 +160,7 @@ public fun unstake<StakeShare, PoolShare>(
     let balance = self.stake.extract().destroy();
 
     emit(RoutedStakeUnstakedEvent<StakeShare, PoolShare> {
-        routed_stake_id: self.id(),
+        routed_stake_id: object::id(self),
         parent_id: parent.to_inner(),
         unstaked_value: balance.value(),
     });
@@ -181,7 +181,7 @@ public fun restake<StakeShare, PoolShare>(
     self.stake.fill(stake::new(balance, ctx));
 
     emit(RoutedStakeRestakedEvent<StakeShare, PoolShare> {
-        routed_stake_id: self.id(),
+        routed_stake_id: object::id(self),
         parent_id: parent.to_inner(),
         staked_value: self.value(),
     });
@@ -212,7 +212,7 @@ public fun sweep<StakeShare, PoolShare, Currency>(
     if (value > 0) {
         routed_pool.deposit(reward);
         emit(RoutedStakeSweptEvent<StakeShare, PoolShare, Currency> {
-            routed_stake_id: self.id(),
+            routed_stake_id: object::id(self),
             parent_id,
             value,
         });
@@ -222,10 +222,6 @@ public fun sweep<StakeShare, PoolShare, Currency>(
 }
 
 // === View Functions ===
-
-public fun id<StakeShare, PoolShare>(self: &RoutedStake<StakeShare, PoolShare>): ID {
-    self.id.to_inner()
-}
 
 public fun has_stake<StakeShare, PoolShare>(self: &RoutedStake<StakeShare, PoolShare>): bool {
     self.stake.is_some()
